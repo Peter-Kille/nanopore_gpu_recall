@@ -1,5 +1,5 @@
 # deploy_recall
-For demux-ing, converting to fasq, renaming and qc-ing from 16S pod5 files
+For demux-ing, converting to fastq, renaming and qc-ing from pod5 files
 
 ```
 Usage: ./deploy_recall --runname NAME --node NODE --datapod5 FOLDER --primer FILE --metadata FILE
@@ -30,14 +30,6 @@ deploy script runs modules in order 1 to 8:
 * 2_recall-fastq.sh
 * 3_recall-rename.sh
 * 4_recall-QC.sh
-* 5_emu-install
-* 6_emu-database
-* 7A_emu-array.sh
-* 7B_emu-combine.sh
-* 8_SARTools.sh (runs script ranacapa_conversion.r)
 
 Steps 1-4 demux, fastq and qc the files. Also renames the files based off the Metadata file.
-Steps 5-7 uses emu to taxonmaticlly classify the files
-Step 8 formats the emu combined tax files into a combatable format for ranacapa R plugin (for visualisation)
-
 
