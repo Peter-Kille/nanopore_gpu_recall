@@ -1,0 +1,126 @@
+#!/bin/bash
+#arguments of parameters for metagenomic slurm pipeline
+
+# Initialize variables
+#These are the variable that you can set when you run the deploy script some are mandatory
+runname=""
+node=""
+gpu="gpu"
+workdir=$(pwd -P)/work
+datapod5=""
+primer=""
+metadata=""
+kit_np="SQK-16S114.24"
+barcode_np="SQK-16S114-24"
+
+# Allowed environments/ the allowed supercomputer partitions 
+VALID_NODE=("epyc" "defq" "epyc_ssd")
+
+# Validate partition (makes sure you typed a allowed HPC partition)
+validate_partition() {
+  for valid in "${VALID_NODE[@]}"; do
+    [[ "$1" == "$valid" ]] && return 0
+  done
+  return 1
+}
+
+# Help message
+#Follow this when running the deploy script e.g. ./deploy -r TEST -n epyc
+print_help() {
+  echo "Usage: $0 --runname NAME --node NODE --datapod5 FILE --primer FILE --metadata FILE "
+  echo ""
+  echo "Options:"
+  echo "  -r  --runname       REQUIRED: Run name or deployment name - should be unique"
+  echo "  -n  --node          REQUIRED: Avalible partition / hpc queue (epyc, defq, epyc_ssd) for step "
+  echo "  -d  --datapod5      REQUIRED: Location/File of pod5 files you want to run "
+  echo "  -p  --primer        REQUIRED: Location/File of the primers"
+  echo "  -m  --metadata      REQUIRED: Location/File of metadata"
+  echo "  -w, --workdir       Optional: working dir - default is current dir /work/"
+  echo "  -g  --gpu           Optional: Avalible gpu parttition, only currently one so default is gpu"
+  echo "  -k  --kit_np        Optional: Nanopore kit/equipment default is SQK-LSK114"
+  echo "  -b  --barcode_np    Optional: Nanopore barcode default is EXP-PBC001"
+  echo "  -h, --help          Show this help message"
+  exit
+}
+
+# Use `getopt` to parse options
+PARSED=$(getopt -o r:n:d:p:m:w:g:k:b:h --long runname:,node:,datapod5:,primer:,metadata:,workdir:,gpu:,kit_np:,barcode_np:,help -- "$@")
+if [[ $? -ne 0 ]]; then
+  echo "Failed to parse options." >&2
+  exit 1
+fi
+
+# Reorganize the positional parameters
+eval set -- "$PARSED"
+
+# Process options
+while true; do
+  case "$1" in
+    -r|--runname) runname="$2"; shift 2 ;;
+    -n|--node)  node="$2"; shift 2 ;;
+    -d|--datapod5) datapod5="$2"; shift 2 ;;
+    -p|--primer) primer="$2"; shift 2 ;;
+    -m|--metadata) metadata="$2"; shift 2 ;;
+    -w|--workdir) workdir="$2";shift 2 ;;
+    -g|--gpu) gpu="$2";shift 2 ;;
+    -k|--kit_np) kit_np="$2";shift 2 ;;
+    -b|--barcode_np) barcode_np="$2";shift 2 ;;
+    -h|--help) print_help ;;
+    --) shift; break ;;
+    *) echo "Unexpected option: $1" >&2; exit 1 ;;
+  esac
+done
+
+### ERROR MESSAGES ####
+# Check if name is set (required)
+if [[ -z "$runname" ]]; then
+  echo "Error: --runname is required - unique run name."
+  echo "Use --help for usage."
+  exit 1
+fi
+
+# Check if pod5 files is set (required)
+if [[ -z "$datapod5" ]]; then
+  echo "Error: --datapod5 is required - needs pod5 files location"
+  echo "Use --help for usage."
+  exit 1
+fi
+
+#Check if primer file is set (required)
+if [[ -z "$primer" ]]; then
+  echo "Error: --primer is required - needs primer file location"
+  echo "Use --help for usage."
+  exit 1
+fi
+
+#Check if metadata file is set (required)
+if [[ -z "$metadata" ]]; then
+  echo "Error: --metadata is required - needs metadata file location"
+  echo "Use --help for usage."
+  exit 1
+fi
+
+
+# Validate partition if provided
+#if [[ -n "node" ]] && ! validate_partition "$node"; then
+ # echo "Error: Invalid parition '$PART'."
+  #echo "Allowed partitions: ${VALID_PART[*]}"
+  #exit 1
+#fi
+
+# Output arguments
+echo "Run name unique: ${runname}"
+echo "With pod5 files: ${datapod5}"
+echo "And primer file: ${primer}"
+echo "Working directory: ${workdir}"
+
+#export arguements
+export runname
+export node
+export gpu
+export workdir
+export datapod5
+export primer
+export metadata
+export kit_np
+export barcode_np
