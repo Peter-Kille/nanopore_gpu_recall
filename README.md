@@ -2,13 +2,12 @@
 For demux-ing, converting to fastq, renaming and qc-ing from pod5 files
 
 ```
-Usage: ./deploy_recall --runname NAME --node NODE --datapod5 FOLDER --primer FILE --metadata FILE
+Usage: ./deploy_recall --runname NAME --node NODE --datapod5 FOLDER --metadata FILE
 
 Options:
   -r  --runname       REQUIRED: Run name or deployment name - should be unique
   -n  --node          REQUIRED: Avalible partition / hpc queue (epyc, defq, epyc_ssd) for step
   -d  --datapod5      REQUIRED: Location/File of pod5 files you want to run
-  -p  --primer        REQUIRED: Location/File of the primers
   -m  --metadata      REQUIRED: Location/File of metadata
   -w, --workdir       Optional: working dir - default is current dir /work/
   -g  --gpu           Optional: Avalible gpu parttition, only currently one so default is gpu
