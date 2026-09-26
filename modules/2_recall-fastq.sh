@@ -19,15 +19,15 @@ cat $0
 
 ### CONVERT TO FASTQ ######
 
-module load BEDTools/2.31.1-GCC-14.3.0
+module load ${bedtools_module}
 #loop for all files in primertrimdir that end in .bam 
-for file in ${primertrimdir}/*.bam; do
+for file in ${demuxdir}/*_barcode*.bam; do
  
 name=$(basename ${file} | cut -f1 -d.)
  
-bedtools bamtofastq -i "${primertrimdir}/${name}.bam" -fq "${fastqdir}/${name}.fastq"
+bedtools bamtofastq -i "${demuxdir}/${name}.bam" -fq "${fastqdir}/${name}.fastq"
 pigz -p ${SLURM_CPUS_PER_TASK} -9 "${fastqdir}/${name}.fastq"
  
 done
 
-module unload BEDTools/2.31.1-GCC-14.3.0
+module unload ${bedtools_module}

@@ -48,15 +48,6 @@ dorado basecaller "/models/dna_r10.4.1_e8.2_400bps_sup@v5.2.0" \
  
 dorado demux --output-dir ${demuxdir}/ --no-classify ${basecalldir}/basecall_all.bam
 
-####### PRIMER TRIM ########
-
-for file in ${demuxdir}/*_barcode*.bam; do
-    name=\$(basename "\$file" | cut -f1 -d.)
-    
-dorado trim "\$file" \
-        --primer-sequences "${sourcedir}/${primer}" \
-        --sequencing-kit "${kit_np}" \
-        > ${primertrimdir}/"\${name}_primertrim.bam"
 done
 
 EOF

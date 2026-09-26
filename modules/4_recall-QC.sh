@@ -20,7 +20,7 @@ cat $0
 
 ###### QC Stages ######
 
-module load fastqc/v0.11.9
+module load ${fastqc_module}
 
 export _JAVA_OPTIONS="-Xmx4g"
 
