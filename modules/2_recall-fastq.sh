@@ -19,7 +19,7 @@ cat $0
 
 ### CONVERT TO FASTQ ######
 
-module load bedtools/2.29.1
+module load BEDTools/2.31.1-GCC-14.3.0
 #loop for all files in primertrimdir that end in .bam 
 for file in ${primertrimdir}/*.bam; do
  
@@ -30,4 +30,4 @@ pigz -p ${SLURM_CPUS_PER_TASK} -9 "${fastqdir}/${name}.fastq"
  
 done
 
-module unload bedtools/2.29.1
+module unload BEDTools/2.31.1-GCC-14.3.0

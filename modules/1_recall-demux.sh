@@ -23,10 +23,10 @@ echo "\$SLURM_MEM_PER_NODE=${SLURM_MEM_PER_NODE}"
 cat $0
 
 # load singularity module
-module load apptainer/1.4.1
+module load Apptainer/1.5.1-GCCcore-14.3.0
  
 #https://hub.docker.com/r/nanoporetech/dorado
-IMAGENAME=doradov0.9.0.sif
+IMAGENAME=dorado2-1-1.sif
 IMAGEDIR=/mnt/ecotox/GROUP-smbpk/resources/singularities/
 
 mkdir -p /tmp/${USER}/apptainer/working
@@ -40,7 +40,7 @@ export BINDS="${BINDS},${pipedir}:${pipedir}"
 cat > ${workdir}/dorado_${SLURM_JOB_ID}.sh <<EOF
  
 ###### RECALL USING NEW ALGOITHUM ######## 
-dorado basecaller "/models/dna_r10.4.1_e8.2_400bps_sup@v5.0.0" \
+dorado basecaller "/models/dna_r10.4.1_e8.2_400bps_sup@v5.2.0" \
         ${sourcedir}/${datapod5} \
          --kit-name ${barcode_np} > ${basecalldir}/basecall_all.bam
  
